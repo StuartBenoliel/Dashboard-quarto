@@ -1,0 +1,26 @@
+project:
+  type: website
+
+website:
+  title: "Gaia TBD"
+  navbar:
+    search: false
+    left:
+      - href: dashboard/index.qmd
+        text: Accueil
+      - href: dashboard/stats_adresses.qmd
+        text: Stats adresses
+      - href: dashboard/stats_voies.qmd
+        text: Stats voies
+      - href: dashboard/stats_graphes_lieu.qmd
+        text: Stats graphes de lieu
+      - href: dashboard/chargements.qmd
+        text: Chargements
+
+format:
+  dashboard:
+    theme: [cosmo, assets/styles/custom.scss, assets/styles/quarto.scss]
+    orientation: columns
+    nav-buttons:
+      - icon: gitlab
+        href: https://gitlab.com/

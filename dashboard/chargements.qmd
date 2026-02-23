@@ -1,0 +1,88 @@
+---
+title: ""
+format: 
+  dashboard:
+    expandable: false
+---
+
+```{r}
+#| include: false
+library(DT)
+library(duckdb)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(sf)
+library(mapview)
+library(ggalluvial)
+library(scales)
+library(stringr)
+
+source("../data_traite.R")
+source("../fonction.R")
+
+```
+
+## COL 1 {.tabset}
+
+```{r}
+#| title: Millésime 2025
+#| fig-height: 10
+#| fig-width: 10
+
+plot_sankey(
+  df_sankey, source = source, final = final, value = value
+)
+
+```
+
+```{r}
+#| title: Millésime 2024
+#| fig-height: 10
+#| fig-width: 10
+
+plot_sankey(
+  df_sankey, source = source, final = final, value = value
+)
+
+```
+
+```{r}
+#| title: Millésime 2023
+#| fig-height: 10
+#| fig-width: 10
+
+plot_sankey(
+  df_sankey_2, source = source, final = final, value = value
+)
+
+```
+
+```{r}
+#| title: Millésime 2022
+#| fig-height: 10
+#| fig-width: 10
+
+plot_sankey(
+  df_sankey_3, source = source, final = final, value = value
+)
+
+```
+
+## COL 2
+
+```{r}
+#| title: Suivi des adresses
+
+plot_heatmap(
+  df_heatmap, x = cat_x, y = cat_y, count = count, 
+  x_label= "Création", y_label= "Dernière identification", legend_label = "Comptage"
+)
+
+```
+
+
+

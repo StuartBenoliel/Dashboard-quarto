@@ -1,0 +1,89 @@
+---
+title: ""
+format: 
+  dashboard:
+    expandable: false
+---
+
+```{r}
+#| include: false
+library(DT)
+library(duckdb)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(sf)
+library(mapview)
+library(ggalluvial)
+library(scales)
+library(stringr)
+
+source("../data_traite.R")
+source("../fonction.R")
+
+```
+
+
+## COL 1 {width=40%}
+
+### ROW 1 
+
+```{r}
+#| content: valuebox
+
+value_box("Adresses sans parcelles", 10000, "dark")
+
+```
+
+```{r}
+#| content: valuebox
+
+value_box("Parcelles sans géométries", 10000, "blue")
+
+```
+
+
+### Tableau {.tabset}
+
+```{r}
+#| title: Carte
+
+map_departement(france_contour)
+
+```
+
+```{r}
+#| title: Tableau
+
+my_table(france_com %>% head(10) %>% st_drop_geometry())
+
+```
+
+## COL 2
+
+### ROW 1 {.tabset}
+
+
+```{r}
+#| title: Lien adresses-adresses
+
+plot_quantile(
+  df_long, x = variable, y = valeur,
+  x_label = "Quantile", y_label = "Nombre d'adresses liées"
+)
+
+```
+
+```{r}
+#| title: Lien adresses-parcelles
+
+plot_quantile(
+  df_long, x = variable, y = valeur,
+  x_label = "Quantile", y_label = "Nombre de parcelles liées à une adresse"
+)
+
+```
+

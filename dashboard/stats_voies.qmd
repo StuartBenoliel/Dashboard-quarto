@@ -1,0 +1,84 @@
+---
+title: ""
+format: 
+  dashboard:
+    expandable: false
+---
+
+```{r}
+#| include: false
+library(DT)
+library(duckdb)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(sf)
+library(mapview)
+library(ggalluvial)
+library(scales)
+library(stringr)
+
+source("../data_traite.R")
+source("../fonction.R")
+
+
+```
+
+
+## COL 1 {width=40%}
+
+### ROW 1 
+
+
+```{r}
+#| content: valuebox
+
+value_box("Voies sans adresses actives", 100, "danger")
+
+```
+
+```{r}
+#| content: valuebox
+
+value_box("Voies sans positions", 100, "light")
+
+```
+
+
+### Tableau
+
+```{r}
+#| title: Type de voies
+
+my_table(france_com %>% head(10) %>% st_drop_geometry())
+
+```
+
+
+## COL 2
+
+### ROW 1 {.tabset}
+
+
+```{r}
+#| title: Nb d'adresses par voie
+
+plot_quantile(
+  df_long, x = variable, y = valeur,
+  x_label = "Quantile", y_label = "Nombre d'adresses par voie"
+)
+```
+
+```{r}
+#| title: Nb de voies par communes
+
+plot_quantile(
+  df_long, x = variable, y = valeur,
+  x_label = "Quantile", y_label = "Nombre de voies par commune"
+)
+
+```
+

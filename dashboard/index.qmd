@@ -1,0 +1,98 @@
+---
+title: ""
+format: 
+  dashboard:
+    expandable: false
+---
+
+```{r}
+#| include: false
+library(DT)
+library(duckdb)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(sf)
+library(mapview)
+library(ggalluvial)
+library(scales)
+library(stringr)
+
+source("../data_traite.R")
+source("../fonction.R")
+
+```
+
+
+## COL 1 {width=30%}
+
+### ROW 1 
+
+```{r}
+#| content: valuebox
+#| icon: geo-alt
+
+value_box("Adresses actives", resultat$nombre_adresses_actives, color = "primary", diff = 1000000)
+
+```
+
+### ROW 2
+
+```{r}
+#| content: valuebox
+#| icon: signpost-split
+
+value_box("Voies actives", resultat$nombre_voies_actives, "secondary", diff = 30000)
+
+```
+
+### ROW 3
+
+```{r}
+#| content: valuebox
+#| icon: building
+
+value_box("Communes actives", resultat$nombre_communes_actives, "success")
+
+```
+
+### ROW 4
+
+```{r}
+#| content: valuebox
+#| icon: grid-3x3
+
+value_box("Parcelles cadastrales", resultat$nombre_parcelles, "info")
+
+```
+
+### ROW 5
+
+```{r}
+#| content: valuebox
+#| icon: diagram-3
+
+value_box("Graphe de lieux", 10000000, "warning")
+
+```
+
+## COL 2
+
+### Adresse {.tabset}
+
+```{r}
+#| title: Carte
+
+mapview(hex)
+
+```
+
+```{r}
+#| title: Tableau
+
+my_table(france_com %>% st_drop_geometry() %>% head(200))
+
+```

@@ -1,0 +1,383 @@
+---
+title: "GaiaViz"
+format:
+  dashboard:
+    theme: cosmo
+---
+
+```{r}
+#| include: false
+library(DT)
+library(duckdb)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(sf)
+
+#source("utils/connect_duckdb.R")
+
+#bdd_gaia_prod <- get_conn_gaia("prod2")
+
+my_table_style <- function(df, caption = NULL) {
+  
+  kable(
+    df,
+    format = "html",
+    caption = caption,
+    align = rep("c", ncol(df)),
+    escape = FALSE
+  ) |>
+    kable_styling(
+      bootstrap_options = c("striped", "condensed"),
+      full_width = FALSE,
+      position = "center"
+    ) |>
+    row_spec(0, bold = TRUE) |>
+    column_spec(1:ncol(df), border_left = TRUE, border_right = TRUE)
+}
+# 
+# resultat <- dbGetQuery(bdd_gaia_prod, "
+#   SELECT 
+#       *
+#   FROM expertise.tableau_de_bord
+# ") %>% tail(1)
+
+resultat <- data.frame(
+  nombre_adresses_actives = 35000000,
+  nombre_voies_actives = 3500000
+)
+
+```
+
+# Menu principal
+
+## ROW 1
+
+### COL 1 {width=25%}
+
+::: {.rows}
+
+::: {.row width="50%"}
+
+```{r}
+#| content: valuebox
+#| title: "Adresses actives"
+list(
+  color = "blue",
+  value = format(resultat$nombre_adresses_actives, 
+                 big.mark = " ", scientific = FALSE)
+)
+```
+
+:::
+
+::: {.row width="50%"}
+
+```{r}
+#| content: valuebox
+#| title: "Voies actives"
+list(
+  color = "green",
+  value = format(resultat$nombre_voies_actives, 
+                 big.mark = " ", scientific = FALSE)
+)
+```
+
+:::
+
+:::
+
+
+### COL 2 {width=30%}
+
+```{r}
+
+df <- data.frame(
+  Année = 2025,
+  Flux = 125000,
+  Qualité = 0.98,
+  Performance = 3.2
+)
+
+kable(
+  df %>% 
+    pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "valeur"
+  ),
+  format = "html",
+  digits = 2,
+  align = "c",
+  caption = "Indicateurs de chargement"
+) |>
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+
+### COL 3 {width=35%}
+
+
+```{r}
+df <- data.frame(
+  A = c(1000, 2000),
+  B = c(3000, 4000)
+)
+
+my_table_style(df, caption = "Indicateurs 2025")
+
+```
+
+
+
+## ROW 2
+
+### COL 1 {width=45%}
+
+```{r}
+print(2)
+```
+
+
+### COL 3 {width=55%}
+
+```{r}
+
+# 1. 6 sommets
+theta <- seq(0, 2*pi, length.out = 6)
+coords <- cbind(cos(theta), sin(theta))
+
+# 2. Fermeture explicite du polygone
+coords_closed <- rbind(coords, coords[1, ])
+
+# 3. Objet sf
+hex <- st_sf(
+  geometry = st_sfc(
+    st_polygon(list(coords_closed))
+  )
+)
+
+# 4. Affichage
+ggplot(hex) +
+  geom_sf(fill = "steelblue", color = "black") +
+  coord_sf() +
+  theme_minimal()
+# 
+# resultat <- dbGetQuery(bdd_gaia_prod, "
+#   SELECT 
+#       *
+#   FROM expertise.stat_positions
+# ")
+# 
+# # Ordre voulu des variables
+# ordre <- c("d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9",
+#            "c91", "c92", "c93", "c94", "c95", "c96", "c97", "c98",
+#            "c99", "d10")
+# 
+# # Convertir en format long
+# df_long <- resultat %>% 
+#   select(-date_valeur) %>% 
+#   pivot_longer(
+#     cols = everything(),
+#     names_to = "variable",
+#     values_to = "valeur"
+#   ) %>%
+#   mutate(variable = factor(variable, levels = ordre)) 
+# 
+# # Graphique points + segments
+# ggplot(df_long, aes(x = variable, y = valeur, group = 1)) +
+#   geom_line(color = "steelblue") +
+#   geom_point(size = 3, color = "steelblue") +
+#   scale_y_log10() +
+#   theme_minimal() +
+#   labs(
+#     x = "Quantile",
+#     y = "Distance en m (ech log)",
+#     title = ""
+#   )
+ 
+
+```
+
+
+# Chargements d'adresses
+
+## Row 1
+
+### Année de chargement {width=5%}
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "",
+  color = "white",
+  value = ""
+)
+```
+
+### BAN 
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "arrow-down",
+  color = "danger",
+  value = "BAN"
+)
+```
+
+### Majic
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "arrow-down",
+  color = "primary",
+  value = "MAJIC"
+)
+```
+
+### RCA
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "arrow-down",
+  color = "secondary",
+  value = 'RCA'
+)
+```
+
+
+## 2025
+
+### Année {width=5%}
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(icon="calendar", color="white", value="2025")
+```
+
+### BAN 2025
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+### Majic 2025
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+### RCA 2025
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+## 2024
+
+### Année {width=5%}
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(icon="calendar", color="white", value="2024")
+```
+
+### BAN 2024
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+### Majic 2024
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+### RCA 2024
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+## 2023
+
+### Année {width=5%}
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(icon="calendar", color="white", value="2023")
+```
+
+### BAN 2023
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+### Majic 2023
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+### 
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "",
+  color = "white",
+  value = ""
+)
+```
+
+## 2022
+
+### Année {width=5%}
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(icon="calendar", color="white", value="2022")
+```
+
+### BAN 2022
+- Adresses en entrée : ...
+- Adresses créées : ...
+- Voies créées : ...
+
+###
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "",
+  color = "white",
+  value = ""
+)
+```
+
+### 
+
+```{r}
+#| content: valuebox
+#| title: ""
+list(
+  icon = "",
+  color = "white",
+  value = ""
+)
+```

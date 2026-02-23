@@ -1,0 +1,167 @@
+---
+title: ""
+format: 
+  dashboard:
+    expandable: false
+    orientation: rows
+---
+
+```{r}
+#| include: false
+library(DT)
+library(duckdb)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(sf)
+library(mapview)
+library(ggalluvial)
+library(scales)
+library(stringr)
+
+source("../data_traite.R")
+source("../fonction.R")
+
+```
+
+## ROW 1 {height=15%}
+
+### COL 1
+
+```{r}
+#| content: valuebox
+
+value_box("Positions", resultat_adresses$pct_positions, "red", TRUE)
+
+```
+
+### COL 2
+
+```{r}
+#| content: valuebox
+
+value_box("Positions BAN", resultat_adresses$pct_positions_ban, "red", TRUE)
+
+```
+
+### COL 3
+
+```{r}
+#| content: valuebox
+
+value_box("Codes postaux", resultat_adresses$pct_codes_postaux, "green", TRUE)
+
+```
+
+### COL 4
+
+```{r}
+#| content: valuebox
+
+value_box("Iris", resultat_adresses$pct_iris, "blue", TRUE)
+
+```
+
+### COL 5
+
+```{r}
+#| content: valuebox
+
+value_box("QPV", resultat_adresses$nb_qpv, "blue")
+
+```
+
+### COL 6
+
+```{r}
+#| content: valuebox
+
+value_box("Ilots", resultat_adresses$nb_ilots, "blue")
+
+```
+
+## ROW 2 {height=15%}
+
+### COL 1
+
+```{r}
+#| content: valuebox
+
+value_box("Positions GAIA", resultat_adresses$pct_positions_gaia, "red", TRUE)
+
+```
+
+### COL 2 
+
+```{r}
+#| content: valuebox
+
+value_box("Positions RCA", resultat_adresses$pct_positions_rca, "red", TRUE)
+
+```
+
+### COL 3 
+
+```{r}
+#| content: valuebox
+
+value_box("Parcelles", resultat_adresses$pct_parcelles, "green", TRUE)
+
+```
+
+### COL 4
+
+```{r}
+#| content: valuebox
+
+value_box("Unités primaires", resultat_adresses$pct_up, "blue", TRUE)
+
+```
+
+### COL 5
+
+```{r}
+#| content: valuebox
+
+value_box("QPV15", resultat_adresses$nb_qpv15, "blue")
+
+```
+
+### COL 6
+
+```{r}
+#| content: valuebox
+
+value_box("QRR", resultat_adresses$nb_qrr, "blue")
+
+```
+
+## ROW 3
+
+### Tableau {.tabset}
+
+```{r}
+#| title: Numéro
+
+my_table(france_com %>% head(10) %>% st_drop_geometry())
+
+```
+
+```{r}
+#| title: Indice de répétition
+
+my_table(france_com %>% head(10) %>% st_drop_geometry())
+
+```
+
+### Distance positions
+
+```{r}
+#| title: Distance maximale entre les positions d'une adresse
+
+plot_quantile(df_long)
+
+```
