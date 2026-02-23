@@ -1,0 +1,41 @@
+<select id="dept">
+  <option value="">Choisir un departement</option>
+  <option value="75">75</option>
+  <option value="13">13</option>
+</select>
+
+<div id="map" style="height:600px;"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+var map = L.map('map').setView([46.8, 2.3], 6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+var currentLayer;
+
+document.getElementById("dept").addEventListener("change", function() {
+
+  var dept = this.value;
+
+  if (currentLayer) {
+    map.removeLayer(currentLayer);
+  }
+
+  if (dept === "") return;
+
+  fetch("data/" + dept + ".geojson")
+    .then(res => res.json())
+    .then(data => {
+      currentLayer = L.geoJSON(data, {
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker(latlng, { radius: 3 });
+        }
+      }).addTo(map);
+
+      map.fitBounds(currentLayer.getBounds());
+    });
+
+});
+</script>
